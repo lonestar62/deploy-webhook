@@ -12,7 +12,7 @@ notify_keeper() {
 
 echo "[deploy] $REPO starting..."
 cd "$APP_DIR"
-git pull origin main
+git fetch origin && git reset --hard origin/main
 [ -f package.json ] && npm install --production
 sudo systemctl restart "$SERVICE"
 notify_keeper "$REPO"
