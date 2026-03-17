@@ -7,7 +7,7 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 9101;
-const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || '';
+const WEBHOOK_SECRET = (process.env.WEBHOOK_SECRET || '').trim();
 
 app.use((req, res, next) => {
   let data = [];
