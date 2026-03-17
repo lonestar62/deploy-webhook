@@ -9,11 +9,19 @@ const app = express();
 const PORT = process.env.PORT || 9101;
 const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || '';
 
-app.use(express.json({
-  verify: (req, res, buf) => {
-    req.rawBody = buf;
-  }
-}));
+app.use((req, res, next) => {
+  let data = [];
+  req.on('data', chunk => data.push(chunk));
+  req.on('end', () => {
+    req.rawBody = Buffer.concat(data);
+    try {
+      req.body = JSON.parse(req.rawBody.toString());
+    } catch {
+      req.body = {};
+    }
+    next();
+  });
+});
 
 function verifySignature(req) {
   if (!WEBHOOK_SECRET) return true;
